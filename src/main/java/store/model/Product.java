@@ -1,11 +1,10 @@
-package store.domain;
+package store.model;
 
 import java.util.Objects;
 import java.util.Optional;
 
 public class Product {
-
-
+    
     public static final int PRICE_MIN_VALUE = 1;
     public static final int QUANTITY_MIN_VALUE = 0;
 
