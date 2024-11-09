@@ -1,10 +1,13 @@
 package store.domain;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 public class Product {
+
+
+    public static final int PRICE_MIN_VALUE = 1;
+    public static final int QUANTITY_MIN_VALUE = 0;
 
     private String name;
     private int price;
@@ -16,34 +19,6 @@ public class Product {
         this.price = price;
         this.quantity = quantity;
         this.promotion = Optional.ofNullable(promotion);
-    }
-
-    private void validate(String name, int price, int quantity, Promotion promotion) {
-        validatePositiveInteger(price);
-        validatePositiveInteger(quantity);
-    }
-
-    private void validatePositiveInteger(int value) {
-        if (value < 1) {
-            throw new IllegalArgumentException();
-        }
-    }
-
-    public static Product createProduct(String input) {
-        List<String> data = List.of(input.split(","));
-        String name = data.get(0);
-        int price = parseInteger(data.get(1));
-        int quantity = parseInteger(data.get(2));
-        Promotion promotion = null;
-        return new Product(name, price, quantity, null);
-    }
-
-    private static int parseInteger(String input) {
-        try {
-            return Integer.parseInt(input);
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException();
-        }
     }
 
     /*
@@ -63,7 +38,7 @@ public class Product {
     }
 
     public Optional<Promotion> getPromotion() {
-        return this.promotion;
+        return promotion;
     }
 
     /*

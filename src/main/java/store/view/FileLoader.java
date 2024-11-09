@@ -12,7 +12,6 @@ public class FileInputView {
         List<String> lines = new ArrayList<>();
         try {
             BufferedReader br = new BufferedReader(new FileReader(fileName));
-            br.readLine();
             String line = br.readLine();
             while (line != null) {
                 lines.add(line);
