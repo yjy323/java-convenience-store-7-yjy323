@@ -68,7 +68,10 @@ public class InventoryService {
 
     public Product searchPromotionProduct(String productName) {
         Optional<Product> product = promotionProductInventory.search(productName);
-        return product.orElse(null);
+        if (product.isEmpty()) {
+            throw new IllegalArgumentException(PURCHASE_NON_EXIST.getMessage());
+        }
+        return product.get();
     }
 
     public Product searchProduct(String productName) {

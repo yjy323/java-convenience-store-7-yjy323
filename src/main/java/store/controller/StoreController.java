@@ -62,9 +62,9 @@ public class StoreController {
         PurchaseService purchaseService = new PurchaseService(inventoryService);
         while (true) {
             try {
-                PurchaseTransaction transaction = purchaseService.create(purchaseInputView.read());
-                purchaseService.purchase(transaction);
-                return;
+                PurchaseTransaction transaction = purchaseService.createTransaction(purchaseInputView.read());
+                transaction.purchase();
+                break;
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }

@@ -13,4 +13,14 @@ public class PurchaseTransaction {
     public List<PurchaseProduct> getItems() {
         return Collections.unmodifiableList(items);
     }
+
+    private void purchaseProduct(PurchaseProduct purchaseProduct) {
+        purchaseProduct.getProduct().buy(purchaseProduct.getQuantity());
+    }
+
+    public void purchase() {
+        for (PurchaseProduct purchaseProduct : items) {
+            purchaseProduct(purchaseProduct);
+        }
+    }
 }

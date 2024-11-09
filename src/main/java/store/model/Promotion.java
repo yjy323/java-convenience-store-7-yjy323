@@ -36,6 +36,10 @@ public class Promotion {
         }
     }
 
+    public boolean isPromotionPeriod(LocalDate now) {
+        return !now.isBefore(startTime) && !now.isAfter(endTime);
+    }
+
     /*
      * Getters
      * */
