@@ -2,11 +2,13 @@ package store.service.parser;
 
 import static store.ErrorMessages.INVALID_DATE;
 import static store.ErrorMessages.INVALID_INTEGER;
+import static store.ErrorMessages.PURCHASE_FORMAT;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
+import store.model.PurchaseProduct;
 
 public class StringParser {
 
@@ -52,5 +54,27 @@ public class StringParser {
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException(INVALID_DATE.getMessage());
         }
+    }
+
+    private static void validateHyphen(String input) {
+        if (input.split("-").length != 2) {
+            throw new IllegalArgumentException(PURCHASE_FORMAT.getMessage());
+        }
+    }
+
+    private static void validateSquareBrackets(String input) {
+        if (!input.startsWith("[") || !input.endsWith("]")) {
+            throw new IllegalArgumentException(PURCHASE_FORMAT.getMessage());
+        }
+    }
+
+    public static PurchaseProduct parsePurchaseProduct(String input) {
+        validateSquareBrackets(input);
+        input = input.substring(1, input.length() - 1);
+
+        validateHyphen(input);
+        String[] split = input.split("-");
+        
+        return new PurchaseProduct(split[0], parseInteger(split[1], 1));
     }
 }

@@ -3,13 +3,16 @@ package store.controller;
 import store.model.Catalog;
 import store.model.Product;
 import store.model.Promotion;
+import store.model.Purchase;
 import store.service.CatalogService;
 import store.service.InventoryService;
+import store.service.PurchaseService;
 import store.service.parser.CsvParser;
 import store.service.parser.ProductCsvParser;
 import store.service.parser.PromotionCsvParser;
 import store.view.FileLoader;
 import store.view.ProductOutputView;
+import store.view.PurchaseInputView;
 
 public class StoreController {
 
@@ -18,6 +21,10 @@ public class StoreController {
 
     private final FileLoader fileLoader = new FileLoader();
     private InventoryService inventoryService;
+
+    /*
+     * Init Method
+     * */
 
     private Catalog<Promotion> initPromotionCatalog() {
         CsvParser<Promotion> promotionCsvParser = new PromotionCsvParser();
@@ -42,8 +49,28 @@ public class StoreController {
         initInventory(productCatalog);
     }
 
-    public void run() {
-        ProductOutputView productOutputView = new ProductOutputView();
+    /*
+     * Run Method
+     * */
+
+    private void welcome(ProductOutputView productOutputView) {
         productOutputView.print(inventoryService.getInventoryStatus());
+    }
+
+    private void purchase(PurchaseInputView purchaseInputView) {
+        PurchaseService purchaseService = new PurchaseService();
+        while (true) {
+            try {
+                Purchase purchase = purchaseService.create(purchaseInputView.read());
+                return;
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    public void run() {
+        welcome(new ProductOutputView());
+        purchase(new PurchaseInputView());
     }
 }

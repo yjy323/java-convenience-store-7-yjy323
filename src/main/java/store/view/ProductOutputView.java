@@ -47,5 +47,6 @@ public class ProductOutputView {
         for (ProductStatus productStatus : inventoryStatus) {
             System.out.println(productStatusLine(productStatus));
         }
+        System.out.println();
     }
 }

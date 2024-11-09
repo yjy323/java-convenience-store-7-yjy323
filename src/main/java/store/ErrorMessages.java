@@ -11,7 +11,9 @@ public enum ErrorMessages {
     INVALID_CSV_FORMAT("유효하지 않은 CSV 파일 형식입니다."),
     INVALID_INTEGER("유효하지 않은 정수 형식입니다."),
     INVALID_DATE("유효하지 않은 날짜 형식입니다."),
-    INVALID_DATE_RANGE("유효하지 않은 기간입니다.");
+    INVALID_DATE_RANGE("유효하지 않은 기간입니다."),
+
+    PURCHASE_FORMAT("올바르지 않은 형식으로 입력했습니다. 다시 입력해 주세요.");
 
     private final String message;
 
