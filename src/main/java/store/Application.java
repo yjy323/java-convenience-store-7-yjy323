@@ -9,6 +9,7 @@ import store.service.parser.CsvParser;
 import store.service.parser.ProductCsvParser;
 import store.service.parser.PromotionCsvParser;
 import store.view.FileLoader;
+import store.view.StoreInfoOutputView;
 
 public class Application {
 
@@ -28,5 +29,8 @@ public class Application {
 
         InventoryService inventoryService = new InventoryService(productCatalog);
         inventoryService.storeAllProduct();
+
+        StoreInfoOutputView storeInfoOutputView = new StoreInfoOutputView();
+        storeInfoOutputView.print(inventoryService.getInventoryStatus());
     }
 }
