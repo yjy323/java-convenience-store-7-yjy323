@@ -4,6 +4,7 @@ import store.model.Catalog;
 import store.model.Product;
 import store.model.Promotion;
 import store.service.CatalogService;
+import store.service.InventoryService;
 import store.service.parser.CsvParser;
 import store.service.parser.ProductCsvParser;
 import store.service.parser.PromotionCsvParser;
@@ -24,5 +25,8 @@ public class Application {
         CsvParser<Product> productCsvParser = new ProductCsvParser(promotionCatalog);
         CatalogService<Product> productCatalogService = new CatalogService<>(productCsvParser);
         Catalog<Product> productCatalog = productCatalogService.create(fileLoader.read(PRODUCT_FILE_PATH));
+
+        InventoryService inventoryService = new InventoryService(productCatalog);
+        inventoryService.storeAllProduct();
     }
 }
