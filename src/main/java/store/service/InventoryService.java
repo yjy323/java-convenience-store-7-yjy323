@@ -66,6 +66,11 @@ public class InventoryService {
         return inventoryStatus;
     }
 
+    public Product searchPromotionProduct(String productName) {
+        Optional<Product> product = promotionProductInventory.search(productName);
+        return product.orElse(null);
+    }
+
     public Product searchProduct(String productName) {
         Optional<Product> product = productInventory.search(productName);
         if (product.isEmpty()) {

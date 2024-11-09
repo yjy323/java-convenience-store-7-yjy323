@@ -1,5 +1,6 @@
 package store.controller;
 
+import camp.nextstep.edu.missionutils.Console;
 import store.model.Catalog;
 import store.model.Product;
 import store.model.Promotion;
@@ -71,8 +72,12 @@ public class StoreController {
     }
 
     public void run() {
-        welcome(new ProductOutputView());
-        purchase(new PurchaseInputView());
-        welcome(new ProductOutputView());
+        boolean status = true;
+        while (status) {
+            welcome(new ProductOutputView());
+            purchase(new PurchaseInputView());
+            System.out.println("감사합니다. 구매하고 싶은 다른 상품이 있나요? (Y/N)");
+            status = Console.readLine().equals("Y");
+        }
     }
 }

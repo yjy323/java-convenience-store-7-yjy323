@@ -1,8 +1,8 @@
 package store.dto;
 
 public class OrderProduct {
-    private final String name;
-    private final int quantity;
+    private String name;
+    private int quantity;
 
     public OrderProduct(String name, int quantity) {
         this.name = name;
@@ -15,5 +15,13 @@ public class OrderProduct {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }
