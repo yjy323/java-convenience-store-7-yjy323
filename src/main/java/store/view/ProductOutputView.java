@@ -9,7 +9,7 @@ import java.text.NumberFormat;
 import java.util.List;
 import store.dto.ProductStatus;
 
-public class StoreInfoOutputView {
+public class ProductOutputView {
 
     private String formatDecimal(int value) {
         NumberFormat formatter = NumberFormat.getInstance();

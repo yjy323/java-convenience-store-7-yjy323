@@ -11,7 +11,6 @@ import store.model.Promotion;
 public class InventoryService {
     private final Inventory productInventory = new Inventory();
     private final Inventory promotionProductInventory = new Inventory();
-
     private final Catalog<Product> productCatalog;
 
     public InventoryService(Catalog<Product> productCatalog) {
