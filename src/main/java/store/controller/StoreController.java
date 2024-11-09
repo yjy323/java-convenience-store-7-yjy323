@@ -3,7 +3,7 @@ package store.controller;
 import store.model.Catalog;
 import store.model.Product;
 import store.model.Promotion;
-import store.model.Purchase;
+import store.model.PurchaseTransaction;
 import store.service.CatalogService;
 import store.service.InventoryService;
 import store.service.PurchaseService;
@@ -58,10 +58,11 @@ public class StoreController {
     }
 
     private void purchase(PurchaseInputView purchaseInputView) {
-        PurchaseService purchaseService = new PurchaseService();
+        PurchaseService purchaseService = new PurchaseService(inventoryService);
         while (true) {
             try {
-                Purchase purchase = purchaseService.create(purchaseInputView.read());
+                PurchaseTransaction transaction = purchaseService.create(purchaseInputView.read());
+                purchaseService.purchase(transaction);
                 return;
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
@@ -72,5 +73,6 @@ public class StoreController {
     public void run() {
         welcome(new ProductOutputView());
         purchase(new PurchaseInputView());
+        welcome(new ProductOutputView());
     }
 }

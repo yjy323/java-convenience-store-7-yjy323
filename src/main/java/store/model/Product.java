@@ -1,10 +1,12 @@
 package store.model;
 
+import static store.ErrorMessages.PURCHASE_NOT_ENOUGH_QUANTITY;
+
 import java.util.Objects;
 import java.util.Optional;
 
 public class Product {
-    
+
     public static final int PRICE_MIN_VALUE = 1;
     public static final int QUANTITY_MIN_VALUE = 0;
 
@@ -18,6 +20,16 @@ public class Product {
         this.price = price;
         this.quantity = quantity;
         this.promotion = Optional.ofNullable(promotion);
+    }
+
+    public void validateUpdateQuantity(int quantity) {
+        if (this.quantity - quantity < 0) {
+            throw new IllegalArgumentException(PURCHASE_NOT_ENOUGH_QUANTITY.getMessage());
+        }
+    }
+
+    public void buy(int buyQuantity) {
+        quantity -= buyQuantity;
     }
 
     /*

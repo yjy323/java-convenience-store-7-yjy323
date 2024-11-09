@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
-import store.model.PurchaseProduct;
+import store.dto.OrderProduct;
 
 public class StringParser {
 
@@ -68,13 +68,13 @@ public class StringParser {
         }
     }
 
-    public static PurchaseProduct parsePurchaseProduct(String input) {
+    public static OrderProduct parseOrder(String input) {
         validateSquareBrackets(input);
         input = input.substring(1, input.length() - 1);
 
         validateHyphen(input);
         String[] split = input.split("-");
-        
-        return new PurchaseProduct(split[0], parseInteger(split[1], 1));
+
+        return new OrderProduct(split[0], parseInteger(split[1], 1));
     }
 }

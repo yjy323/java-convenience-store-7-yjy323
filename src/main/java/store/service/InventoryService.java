@@ -1,7 +1,10 @@
 package store.service;
 
+import static store.ErrorMessages.PURCHASE_NON_EXIST;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import store.dto.ProductStatus;
 import store.model.Catalog;
 import store.model.Inventory;
@@ -61,5 +64,13 @@ public class InventoryService {
             createProductStatus(inventoryStatus, key);
         }
         return inventoryStatus;
+    }
+
+    public Product searchProduct(String productName) {
+        Optional<Product> product = productInventory.search(productName);
+        if (product.isEmpty()) {
+            throw new IllegalArgumentException(PURCHASE_NON_EXIST.getMessage());
+        }
+        return product.get();
     }
 }
