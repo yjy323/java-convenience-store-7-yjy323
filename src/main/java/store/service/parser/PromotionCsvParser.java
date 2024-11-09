@@ -1,4 +1,4 @@
-package store.service;
+package store.service.parser;
 
 import java.time.LocalDate;
 import store.model.Promotion;

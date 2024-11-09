@@ -1,4 +1,4 @@
-package store.service;
+package store.service.parser;
 
 import static store.ErrorMessages.INVALID_DATE;
 import static store.ErrorMessages.INVALID_INTEGER;

@@ -1,4 +1,4 @@
-package store.service;
+package store.service.parser;
 
 import static store.ErrorMessages.NON_EXIST_PROMOTION;
 import static store.model.Product.PRICE_MIN_VALUE;

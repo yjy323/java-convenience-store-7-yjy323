@@ -8,6 +8,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import store.model.Catalog;
 import store.model.Promotion;
+import store.service.parser.PromotionCsvParser;
 
 class PromotionCatalogServiceTest {
     private final PromotionCsvParser parser = new PromotionCsvParser();
@@ -23,7 +24,7 @@ class PromotionCatalogServiceTest {
         String promotion2 = promotionName2 + ",1,1,2024-01-01,2024-12-31";
 
         //When
-        Catalog<Promotion> catalog = catalogService.load(List.of(header, promotion1, promotion2));
+        Catalog<Promotion> catalog = catalogService.create(List.of(header, promotion1, promotion2));
 
         //Then
         assertThat(catalog.getItems().stream().map(Promotion::getName).toList())
@@ -40,7 +41,7 @@ class PromotionCatalogServiceTest {
         String promotion2 = promotionName2 + ",1,1,2024-01-01,2024-12-31";
 
         //When, Then
-        assertThatThrownBy(() -> catalogService.load(List.of(header, promotion1, promotion2)))
+        assertThatThrownBy(() -> catalogService.create(List.of(header, promotion1, promotion2)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(DUPLICATE_ITEM.getMessage());
     }

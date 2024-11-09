@@ -4,9 +4,9 @@ import store.model.Catalog;
 import store.model.Product;
 import store.model.Promotion;
 import store.service.CatalogService;
-import store.service.CsvParser;
-import store.service.ProductCsvParser;
-import store.service.PromotionCsvParser;
+import store.service.parser.CsvParser;
+import store.service.parser.ProductCsvParser;
+import store.service.parser.PromotionCsvParser;
 import store.view.FileLoader;
 
 public class Application {

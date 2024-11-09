@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import store.model.Catalog;
 import store.model.Product;
 import store.model.Promotion;
+import store.service.parser.ProductCsvParser;
 
 class ProductCatalogServiceTest {
     private ProductCsvParser parser;
@@ -41,7 +42,7 @@ class ProductCatalogServiceTest {
         String product2 = productName2 + ",1000,10," + promotionName2;
 
         //When
-        Catalog<Product> catalog = catalogService.load(List.of(header, product1, product2));
+        Catalog<Product> catalog = catalogService.create(List.of(header, product1, product2));
 
         //Then
         assertThat(catalog.getItems().stream().map(Product::getName).toList())
@@ -59,7 +60,7 @@ class ProductCatalogServiceTest {
         String product2 = productName1 + ",1000,10," + promotionName2;
 
         //When
-        Catalog<Product> catalog = catalogService.load(List.of(header, product1, product2));
+        Catalog<Product> catalog = catalogService.create(List.of(header, product1, product2));
 
         //Then
         assertThat(catalog.getItems().stream().map(Product::getName).toList())
@@ -77,7 +78,7 @@ class ProductCatalogServiceTest {
         String product2 = productName2 + ",1000,10," + promotionName1;
 
         //When
-        Catalog<Product> catalog = catalogService.load(List.of(header, product1, product2));
+        Catalog<Product> catalog = catalogService.create(List.of(header, product1, product2));
 
         //Then
         assertThat(catalog.getItems().stream().map(Product::getName).toList())
@@ -94,7 +95,7 @@ class ProductCatalogServiceTest {
         String product2 = productName1 + ",1000,10," + promotionName1;
 
         //When, Then
-        assertThatThrownBy(() -> catalogService.load(List.of(header, product1, product2)))
+        assertThatThrownBy(() -> catalogService.create(List.of(header, product1, product2)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(DUPLICATE_ITEM.getMessage());
     }

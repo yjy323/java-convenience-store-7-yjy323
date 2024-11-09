@@ -1,4 +1,4 @@
-package store.service;
+package store.service.parser;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

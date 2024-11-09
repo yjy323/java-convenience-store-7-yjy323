@@ -5,6 +5,7 @@ import static store.ErrorMessages.DUPLICATE_ITEM;
 import java.util.ArrayList;
 import java.util.List;
 import store.model.Catalog;
+import store.service.parser.CsvParser;
 
 public class CatalogService<T> {
 
