@@ -11,7 +11,7 @@ import store.model.Promotion;
 import store.model.PurchaseProduct;
 import store.model.PurchaseTransaction;
 import store.service.parser.StringParser;
-import store.view.PromotionInputView;
+import store.view.InputView;
 
 public class PurchaseService {
 
@@ -44,8 +44,7 @@ public class PurchaseService {
     }
 
     private void purchasePromotionProduct(List<PurchaseProduct> purchaseProducts, OrderProduct orderProduct) {
-
-        PromotionInputView promotionInputView = new PromotionInputView();
+        InputView inputView = new InputView();
         Product product = inventoryService.searchPromotionProduct(orderProduct.getName());
         Promotion promotion = product.getPromotion().get();
 
@@ -54,14 +53,14 @@ public class PurchaseService {
         int mod = orderProduct.getQuantity() % (buy + free);
         int free2 = (buy + free - mod);
         if (free2 == 1) {
-            if (promotionInputView.confirmAdditionalFree(orderProduct.getName())) {
+            if (inputView.confirmAdditionalFree(orderProduct.getName())) {
                 orderProduct.setQuantity(orderProduct.getQuantity() + 1);
             }
         }
 
         if (product.getQuantity() < orderProduct.getQuantity()) {
             int lack = orderProduct.getQuantity() - product.getQuantity() + product.getQuantity() % (buy + free);
-            if (promotionInputView.confirmPurchaseWithoutPromotion(orderProduct.getName(), lack)) {
+            if (inputView.confirmPurchaseWithoutPromotion(orderProduct.getName(), lack)) {
                 purchaseProduct(purchaseProducts,
                         new OrderProduct(orderProduct.getName(), orderProduct.getQuantity() - product.getQuantity()));
             } else {

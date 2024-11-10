@@ -2,17 +2,13 @@ package store.view;
 
 import static store.ErrorMessages.PURCHASE_ETC;
 import static store.Messages.CONFIRM_ADD_FREE;
+import static store.Messages.CONFIRM_MEMBERSHIP;
 import static store.Messages.CONFIRM_WITHOUT_PROMOTION;
+import static store.Messages.PURCHASE_GUIDE;
 
 import camp.nextstep.edu.missionutils.Console;
-import java.text.NumberFormat;
 
-public class PromotionInputView {
-
-    private String formatDecimal(int value) {
-        NumberFormat formatter = NumberFormat.getInstance();
-        return formatter.format(value);
-    }
+public class InputView implements View {
 
     private boolean confirm(String msg) {
         while (true) {
@@ -28,11 +24,20 @@ public class PromotionInputView {
         }
     }
 
+    public String readPurchase() {
+        System.out.println(PURCHASE_GUIDE.getMessage());
+        return Console.readLine();
+    }
+
     public boolean confirmAdditionalFree(String productName) {
         return confirm(String.format(CONFIRM_ADD_FREE.getMessage(), productName));
     }
 
     public boolean confirmPurchaseWithoutPromotion(String productName, int lack) {
         return confirm(String.format(CONFIRM_WITHOUT_PROMOTION.getMessage(), productName, formatDecimal(lack)));
+    }
+
+    public boolean confirmMembership() {
+        return confirm(String.format(CONFIRM_MEMBERSHIP.getMessage()));
     }
 }

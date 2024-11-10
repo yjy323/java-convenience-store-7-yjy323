@@ -6,7 +6,6 @@ import store.model.Product;
 import store.model.Promotion;
 import store.model.PurchaseProduct;
 import store.model.PurchaseTransaction;
-import store.view.MembershipView;
 
 public class PaymentService {
 
@@ -17,8 +16,8 @@ public class PaymentService {
         this.purchaseTransaction = purchaseTransaction;
     }
 
-    public void confirmMembership(MembershipView membershipView) {
-        if (membershipView.confirmMembership()) {
+    public void confirmMembership(boolean confirm) {
+        if (confirm) {
             membershipStatus = true;
         }
     }

@@ -13,19 +13,24 @@ import store.service.parser.CsvParser;
 import store.service.parser.ProductCsvParser;
 import store.service.parser.PromotionCsvParser;
 import store.view.FileLoader;
-import store.view.MembershipView;
-import store.view.ProductOutputView;
-import store.view.PurchaseInputView;
-import store.view.ReceiptOutputView;
+import store.view.InputView;
+import store.view.OutputView;
 
 public class StoreController {
 
     private static final String PROMOTION_FILE_PATH = "src/main/resources/promotions.md";
     private static final String PRODUCT_FILE_PATH = "src/main/resources/products.md";
+    private final InputView inputView;
+    private final OutputView outputView;
 
     private final FileLoader fileLoader = new FileLoader();
     private InventoryService inventoryService;
     private PurchaseTransaction transaction;
+
+    public StoreController(InputView inputView, OutputView outputView) {
+        this.inputView = inputView;
+        this.outputView = outputView;
+    }
 
     /*
      * Init Method
@@ -58,15 +63,15 @@ public class StoreController {
      * Run Method
      * */
 
-    private void welcome(ProductOutputView productOutputView) {
-        productOutputView.print(inventoryService.getInventoryStatus());
+    private void welcome() {
+        outputView.printProducts(inventoryService.getInventoryStatus());
     }
 
-    private void purchase(PurchaseInputView purchaseInputView) {
+    private void purchase() {
         PurchaseService purchaseService = new PurchaseService(inventoryService);
         while (true) {
             try {
-                transaction = purchaseService.createTransaction(purchaseInputView.read());
+                transaction = purchaseService.createTransaction(inputView.readPurchase());
                 transaction.purchase();
                 break;
             } catch (IllegalArgumentException e) {
@@ -76,17 +81,16 @@ public class StoreController {
     }
 
     private void payment() {
-        ReceiptOutputView receiptOutputView = new ReceiptOutputView();
         PaymentService paymentService = new PaymentService(transaction);
-        paymentService.confirmMembership(new MembershipView());
-        receiptOutputView.print(paymentService.createReceipt());
+        paymentService.confirmMembership(inputView.confirmMembership());
+        outputView.printReceipt(paymentService.createReceipt());
     }
 
     public void run() {
         boolean status = true;
         while (status) {
-            welcome(new ProductOutputView());
-            purchase(new PurchaseInputView());
+            welcome();
+            purchase();
             payment();
             System.out.println("감사합니다. 구매하고 싶은 다른 상품이 있나요? (Y/N)");
             status = Console.readLine().equals("Y");
