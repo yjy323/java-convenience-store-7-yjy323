@@ -1,6 +1,5 @@
 package store.model;
 
-import java.util.Collections;
 import java.util.List;
 import store.dto.PaymentDto;
 import store.dto.ProductDto;
@@ -11,15 +10,6 @@ public class Payment {
 
     public Payment(List<Purchase> purchases) {
         this.purchases = purchases;
-    }
-
-
-    public List<Purchase> getPurchases() {
-        return Collections.unmodifiableList(purchases);
-    }
-
-    public boolean isMembershipStatus() {
-        return membershipStatus;
     }
 
     public void applyMembership() {
@@ -47,8 +37,10 @@ public class Payment {
         }
         Promotion promotion = product.getPromotion().get();
         int freeQuantity = purchase.getQuantity() / (promotion.getBuy() + promotion.getFree());
+
         paymentDto.addProducts(new ProductDto(product.getName(), product.getPrice(), purchase.getQuantity()));
         paymentDto.addPromotionTotalPrice(purchase.getQuantity() * product.getPrice());
+
         promotionGift(paymentDto, product, freeQuantity);
 
     }
