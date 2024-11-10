@@ -28,8 +28,9 @@ public class Product {
         }
     }
 
-    public void buy(int buyQuantity) {
-        quantity -= buyQuantity;
+    public void buy(int quantity) {
+        validateUpdateQuantity(quantity);
+        this.quantity -= quantity;
     }
 
     /*

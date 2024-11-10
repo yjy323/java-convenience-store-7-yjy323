@@ -7,13 +7,16 @@ import store.model.Promotion;
 import store.model.PurchaseTransaction;
 import store.service.CatalogService;
 import store.service.InventoryService;
+import store.service.PaymentService;
 import store.service.PurchaseService;
 import store.service.parser.CsvParser;
 import store.service.parser.ProductCsvParser;
 import store.service.parser.PromotionCsvParser;
 import store.view.FileLoader;
+import store.view.MembershipView;
 import store.view.ProductOutputView;
 import store.view.PurchaseInputView;
+import store.view.ReceiptOutputView;
 
 public class StoreController {
 
@@ -22,6 +25,7 @@ public class StoreController {
 
     private final FileLoader fileLoader = new FileLoader();
     private InventoryService inventoryService;
+    private PurchaseTransaction transaction;
 
     /*
      * Init Method
@@ -62,7 +66,7 @@ public class StoreController {
         PurchaseService purchaseService = new PurchaseService(inventoryService);
         while (true) {
             try {
-                PurchaseTransaction transaction = purchaseService.createTransaction(purchaseInputView.read());
+                transaction = purchaseService.createTransaction(purchaseInputView.read());
                 transaction.purchase();
                 break;
             } catch (IllegalArgumentException e) {
@@ -71,11 +75,19 @@ public class StoreController {
         }
     }
 
+    private void payment() {
+        ReceiptOutputView receiptOutputView = new ReceiptOutputView();
+        PaymentService paymentService = new PaymentService(transaction);
+        paymentService.confirmMembership(new MembershipView());
+        receiptOutputView.print(paymentService.createReceipt());
+    }
+
     public void run() {
         boolean status = true;
         while (status) {
             welcome(new ProductOutputView());
             purchase(new PurchaseInputView());
+            payment();
             System.out.println("감사합니다. 구매하고 싶은 다른 상품이 있나요? (Y/N)");
             status = Console.readLine().equals("Y");
         }

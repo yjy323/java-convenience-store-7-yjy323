@@ -14,13 +14,10 @@ public class PurchaseTransaction {
         return Collections.unmodifiableList(items);
     }
 
-    private void purchaseProduct(PurchaseProduct purchaseProduct) {
-        purchaseProduct.getProduct().buy(purchaseProduct.getQuantity());
-    }
-
     public void purchase() {
         for (PurchaseProduct purchaseProduct : items) {
-            purchaseProduct(purchaseProduct);
+            Product product = purchaseProduct.getProduct();
+            product.buy(purchaseProduct.getQuantity());
         }
     }
 }

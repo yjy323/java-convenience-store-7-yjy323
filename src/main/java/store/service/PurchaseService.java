@@ -1,5 +1,7 @@
 package store.service;
 
+import static store.ErrorMessages.PURCHASE_NOT_ENOUGH_QUANTITY;
+
 import camp.nextstep.edu.missionutils.DateTimes;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +52,8 @@ public class PurchaseService {
         int buy = promotion.getBuy();
         int free = promotion.getFree();
         int mod = orderProduct.getQuantity() % (buy + free);
-        if ((buy + free - mod) == 1) {
+        int free2 = (buy + free - mod);
+        if (free2 == 1) {
             if (promotionInputView.confirmAdditionalFree(orderProduct.getName())) {
                 orderProduct.setQuantity(orderProduct.getQuantity() + 1);
             }
@@ -61,6 +64,10 @@ public class PurchaseService {
             if (promotionInputView.confirmPurchaseWithoutPromotion(orderProduct.getName(), lack)) {
                 purchaseProduct(purchaseProducts,
                         new OrderProduct(orderProduct.getName(), orderProduct.getQuantity() - product.getQuantity()));
+            } else {
+                if (true) {
+                    throw new IllegalArgumentException(PURCHASE_NOT_ENOUGH_QUANTITY.getMessage());
+                }
             }
             orderProduct.setQuantity(product.getQuantity());
         }
