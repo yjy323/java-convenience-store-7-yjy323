@@ -31,7 +31,8 @@ public class PromotionCsvParser implements CsvParser<Promotion> {
 
         String name = splitLine[MetaData.NAME.getIndex()];
         int buy = StringParser.parseInteger(splitLine[MetaData.BUY.getIndex()], Promotion.BUY_MIN_VALUE);
-        int free = StringParser.parseInteger(splitLine[MetaData.FREE.getIndex()], Promotion.FREE_MIN_VALUE);
+        int free = StringParser.parseInteger(splitLine[MetaData.FREE.getIndex()],
+                Promotion.FREE_MIN_VALUE, Promotion.FREE_MAX_VALUE);
         LocalDate startTime = StringParser.parseDate(splitLine[MetaData.START_DATE.getIndex()]);
         LocalDate endTime = StringParser.parseDate(splitLine[MetaData.END_DATE.getIndex()]);
         return new Promotion(name, buy, free, startTime, endTime);

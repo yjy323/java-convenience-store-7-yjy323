@@ -1,10 +1,10 @@
 package store.dto;
 
-public class OrderProduct {
+public class PurchaseDto {
     private String name;
     private int quantity;
 
-    public OrderProduct(String name, int quantity) {
+    public PurchaseDto(String name, int quantity) {
         this.name = name;
         this.quantity = quantity;
     }

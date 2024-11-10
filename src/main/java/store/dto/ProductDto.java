@@ -1,20 +1,20 @@
 package store.dto;
 
-public class ProductStatus {
+public class ProductDto {
 
     private String name;
     private int price;
     private int quantity;
     private String promotionName;
 
-    public ProductStatus(String name, int price, int quantity) {
+    public ProductDto(String name, int price, int quantity) {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
         this.promotionName = "";
     }
 
-    public ProductStatus(String name, int price, int quantity, String promotionName) {
+    public ProductDto(String name, int price, int quantity, String promotionName) {
         this.name = name;
         this.price = price;
         this.quantity = quantity;

@@ -1,11 +1,11 @@
 package store.model;
 
-public class PurchaseProduct {
+public class Purchase {
 
     private final Product product;
     private final int quantity;
 
-    public PurchaseProduct(Product product, int quantity) {
+    public Purchase(Product product, int quantity) {
         this.product = product;
         this.quantity = quantity;
     }

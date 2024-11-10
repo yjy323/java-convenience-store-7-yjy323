@@ -4,20 +4,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Receipt {
-    private final List<ProductStatus> products = new ArrayList<>();
-    private final List<ProductStatus> freeProducts = new ArrayList<>();
+public class PaymentDto {
+    private final List<ProductDto> products = new ArrayList<>();
+    private final List<ProductDto> freeProducts = new ArrayList<>();
     private int regularTotalPrice = 0;
     private int promotionTotalPrice = 0;
     private int totalQuantity = 0;
     private int promotionDiscount = 0;
-    private boolean membershipStatus = false;
+    private int membershipDiscount = 0;
 
-    public List<ProductStatus> getProducts() {
+    public List<ProductDto> getProducts() {
         return Collections.unmodifiableList(products);
     }
 
-    public List<ProductStatus> getFreeProducts() {
+    public List<ProductDto> getFreeProducts() {
         return Collections.unmodifiableList(freeProducts);
     }
 
@@ -37,8 +37,12 @@ public class Receipt {
         return promotionDiscount;
     }
 
-    public void addProducts(ProductStatus product) {
-        for (ProductStatus p : products) {
+    public int getMembershipDiscount() {
+        return membershipDiscount;
+    }
+
+    public void addProducts(ProductDto product) {
+        for (ProductDto p : products) {
             if (p.getName().equals(product.getName())) {
                 p.setQuantity(p.getQuantity() + product.getQuantity());
                 return;
@@ -51,7 +55,7 @@ public class Receipt {
         this.regularTotalPrice += regularPrice;
     }
 
-    public void addFreeProducts(ProductStatus product) {
+    public void addFreeProducts(ProductDto product) {
         freeProducts.add(product);
     }
 
@@ -67,11 +71,7 @@ public class Receipt {
         this.promotionDiscount += promotionDiscount;
     }
 
-    public boolean isMembershipStatus() {
-        return membershipStatus;
-    }
-
-    public void setMembershipStatus(boolean membershipStatus) {
-        this.membershipStatus = membershipStatus;
+    public void addMembershipDiscount(int membershipDiscount) {
+        this.membershipDiscount += membershipDiscount;
     }
 }

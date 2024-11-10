@@ -9,6 +9,7 @@ public class Promotion {
 
     public static final int BUY_MIN_VALUE = 1;
     public static final int FREE_MIN_VALUE = 1;
+    public static final int FREE_MAX_VALUE = 1;
     public static final String NON_PROMOTION = "null";
 
     private String name;
@@ -38,6 +39,11 @@ public class Promotion {
 
     public boolean isPromotionPeriod(LocalDate now) {
         return !now.isBefore(startTime) && !now.isAfter(endTime);
+    }
+
+    public boolean canGetFree(int purchaseQuantity) {
+        int ctr = buy + free;
+        return purchaseQuantity % ctr == buy;
     }
 
     /*

@@ -2,11 +2,11 @@ package store;
 
 public enum ErrorMessages {
 
-    DUPLICATE_ITEM("중복된 상품 또는 프로모션이 존재합니다."),
-    NON_EXIST_PROMOTION("존재하지 않는 프로모션입니다."),
-
     FILE_OPEN_FAIL("%s 파일을 여는데 실패하였습니다."),
     FILE_READ_FAIL("%s 파일을 읽는데 실패하였습니다."),
+
+    DUPLICATE_ITEM("중복된 상품 또는 프로모션이 존재합니다."),
+    NON_EXIST_PROMOTION("존재하지 않는 프로모션입니다."),
 
     INVALID_CSV_FORMAT("유효하지 않은 CSV 파일 형식입니다."),
     INVALID_INTEGER("유효하지 않은 정수 형식입니다."),

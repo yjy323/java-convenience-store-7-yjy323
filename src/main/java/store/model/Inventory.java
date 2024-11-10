@@ -1,7 +1,6 @@
 package store.model;
 
 import java.util.HashMap;
-import java.util.Optional;
 
 public class Inventory {
     private final HashMap<String, Product> stock = new HashMap<>();
@@ -10,7 +9,11 @@ public class Inventory {
         stock.put(product.getName(), product);
     }
 
-    public Optional<Product> search(String key) {
-        return Optional.ofNullable(stock.get(key));
+    public boolean hasProduct(String productName) {
+        return stock.containsKey(productName);
+    }
+
+    public Product search(String key) {
+        return stock.get(key);
     }
 }

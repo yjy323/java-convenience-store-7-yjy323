@@ -1,13 +1,12 @@
 package store.controller;
 
-import camp.nextstep.edu.missionutils.Console;
 import store.model.Catalog;
+import store.model.Inventory;
+import store.model.Payment;
 import store.model.Product;
 import store.model.Promotion;
-import store.model.PurchaseTransaction;
 import store.service.CatalogService;
 import store.service.InventoryService;
-import store.service.PaymentService;
 import store.service.PurchaseService;
 import store.service.parser.CsvParser;
 import store.service.parser.ProductCsvParser;
@@ -20,14 +19,19 @@ public class StoreController {
 
     private static final String PROMOTION_FILE_PATH = "src/main/resources/promotions.md";
     private static final String PRODUCT_FILE_PATH = "src/main/resources/products.md";
+
     private final InputView inputView;
     private final OutputView outputView;
+    private final FileLoader fileLoader;
 
-    private final FileLoader fileLoader = new FileLoader();
-    private InventoryService inventoryService;
-    private PurchaseTransaction transaction;
+    private final Inventory productInventory = new Inventory();
+    private final Inventory promotionProductInventory = new Inventory();
 
-    public StoreController(InputView inputView, OutputView outputView) {
+    InventoryService inventoryService;
+    Payment payment;
+
+    public StoreController(FileLoader fileLoader, InputView inputView, OutputView outputView) {
+        this.fileLoader = fileLoader;
         this.inputView = inputView;
         this.outputView = outputView;
     }
@@ -49,7 +53,8 @@ public class StoreController {
     }
 
     private void initInventory(Catalog<Product> productCatalog) {
-        inventoryService = new InventoryService(productCatalog);
+        inventoryService = new InventoryService(productCatalog, productInventory,
+                promotionProductInventory);
         inventoryService.storeAllProduct();
     }
 
@@ -68,11 +73,10 @@ public class StoreController {
     }
 
     private void purchase() {
-        PurchaseService purchaseService = new PurchaseService(inventoryService);
+        PurchaseService purchaseService = new PurchaseService(inputView, productInventory, promotionProductInventory);
         while (true) {
             try {
-                transaction = purchaseService.createTransaction(inputView.readPurchase());
-                transaction.purchase();
+                payment = purchaseService.purchaseProcess();
                 break;
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
@@ -80,20 +84,19 @@ public class StoreController {
         }
     }
 
-    private void payment() {
-        PaymentService paymentService = new PaymentService(transaction);
-        paymentService.confirmMembership(inputView.confirmMembership());
-        outputView.printReceipt(paymentService.createReceipt());
-    }
+//    private void payment() {
+//        PaymentService paymentService = new PaymentService(payment);
+//        paymentService.confirmMembership(inputView.confirmMembership());
+//        outputView.printReceipt(paymentService.createReceipt());
+//    }
 
     public void run() {
         boolean status = true;
         while (status) {
             welcome();
             purchase();
-            payment();
-            System.out.println("감사합니다. 구매하고 싶은 다른 상품이 있나요? (Y/N)");
-            status = Console.readLine().equals("Y");
+            // payment();
+            status = inputView.confirmContinuePurchase();
         }
     }
 }

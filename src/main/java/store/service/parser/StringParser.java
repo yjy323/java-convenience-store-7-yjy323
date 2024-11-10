@@ -8,14 +8,26 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
-import store.dto.OrderProduct;
+import java.util.ArrayList;
+import java.util.List;
+import store.dto.PurchaseDto;
 
 public class StringParser {
 
+    private static final String DATE_FORMAT = "uuuu-MM-dd";
+    private static final String PRODUCT_NAME_QUANTITY_DELIMITER = "-";
+    private static final String PRODUCT_WRAPPER_LEFT = "[";
+    private static final String PRODUCT_WRAPPER_RIGHT = "]";
+    private static final String PRODUCT_DELIMITER = ",";
+
+
     private static final DateTimeFormatter formatter = DateTimeFormatter
-            .ofPattern("uuuu-MM-dd")
+            .ofPattern(DATE_FORMAT)
             .withResolverStyle(ResolverStyle.STRICT);
 
+    /*
+     * Integer
+     * */
     public static int parseInteger(String input) {
         try {
             return Integer.parseInt(input);
@@ -48,6 +60,10 @@ public class StringParser {
         }
     }
 
+    /*
+     * Date
+     * */
+
     public static LocalDate parseDate(String input) {
         try {
             return LocalDate.parse(input, formatter);
@@ -56,25 +72,39 @@ public class StringParser {
         }
     }
 
-    private static void validateHyphen(String input) {
-        if (input.split("-").length != 2) {
+    /*
+     * Order
+     * */
+
+    private static void validateNameQuantityFormat(String input) {
+        if (input.split(PRODUCT_NAME_QUANTITY_DELIMITER).length != 2) {
             throw new IllegalArgumentException(PURCHASE_FORMAT.getMessage());
         }
     }
 
-    private static void validateSquareBrackets(String input) {
-        if (!input.startsWith("[") || !input.endsWith("]")) {
+    private static void validateWrapperFormat(String input) {
+        if (!input.startsWith(PRODUCT_WRAPPER_LEFT) || !input.endsWith(PRODUCT_WRAPPER_RIGHT)) {
             throw new IllegalArgumentException(PURCHASE_FORMAT.getMessage());
         }
     }
 
-    public static OrderProduct parseOrder(String input) {
-        validateSquareBrackets(input);
+    public static PurchaseDto parsePurchaseDto(String input) {
+        validateWrapperFormat(input);
         input = input.substring(1, input.length() - 1);
 
-        validateHyphen(input);
-        String[] split = input.split("-");
+        validateNameQuantityFormat(input);
+        String[] split = input.split(PRODUCT_NAME_QUANTITY_DELIMITER);
 
-        return new OrderProduct(split[0], parseInteger(split[1], 1));
+        return new PurchaseDto(split[0], parseInteger(split[1], 1));
+    }
+
+    public static List<PurchaseDto> parsePurchaseDtoList(String input) {
+        List<String> dataList = List.of(input.split(PRODUCT_DELIMITER));
+
+        List<PurchaseDto> PurchaseDtoList = new ArrayList<>();
+        for (String data : dataList) {
+            PurchaseDtoList.add(StringParser.parsePurchaseDto(data));
+        }
+        return PurchaseDtoList;
     }
 }

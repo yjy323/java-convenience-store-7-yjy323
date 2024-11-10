@@ -2,6 +2,7 @@ package store.view;
 
 import static store.ErrorMessages.PURCHASE_ETC;
 import static store.Messages.CONFIRM_ADD_FREE;
+import static store.Messages.CONFIRM_CONTINUE_PURCHASE;
 import static store.Messages.CONFIRM_MEMBERSHIP;
 import static store.Messages.CONFIRM_WITHOUT_PROMOTION;
 import static store.Messages.PURCHASE_GUIDE;
@@ -39,5 +40,9 @@ public class InputView implements View {
 
     public boolean confirmMembership() {
         return confirm(String.format(CONFIRM_MEMBERSHIP.getMessage()));
+    }
+
+    public boolean confirmContinuePurchase() {
+        return confirm(String.format(CONFIRM_CONTINUE_PURCHASE.getMessage()));
     }
 }
