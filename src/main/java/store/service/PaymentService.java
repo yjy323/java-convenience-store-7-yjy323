@@ -47,6 +47,7 @@ public class PaymentService {
 
         for (Purchase purchase : payment.getPurchases()) {
             Product product = purchase.getProduct();
+            product.buy(purchase.getQuantity());
             paymentDto.addTotalQuantity(product.getQuantity());
             regularProductPayment(paymentDto, product, purchase);
             promotionProductPayment(paymentDto, product, purchase);
