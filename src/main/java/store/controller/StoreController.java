@@ -7,6 +7,7 @@ import store.model.Product;
 import store.model.Promotion;
 import store.service.CatalogService;
 import store.service.InventoryService;
+import store.service.PaymentService;
 import store.service.PurchaseService;
 import store.service.parser.CsvParser;
 import store.service.parser.ProductCsvParser;
@@ -84,18 +85,18 @@ public class StoreController {
         }
     }
 
-//    private void payment() {
-//        PaymentService paymentService = new PaymentService(payment);
-//        paymentService.confirmMembership(inputView.confirmMembership());
-//        outputView.printReceipt(paymentService.createReceipt());
-//    }
+    private void payment() {
+        PaymentService paymentService = new PaymentService(payment);
+        paymentService.confirmMembership(inputView.confirmMembership());
+        outputView.printReceipt(paymentService.paymentProcess());
+    }
 
     public void run() {
         boolean status = true;
         while (status) {
             welcome();
             purchase();
-            // payment();
+            payment();
             status = inputView.confirmContinuePurchase();
         }
     }

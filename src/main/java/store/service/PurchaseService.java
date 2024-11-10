@@ -2,6 +2,7 @@ package store.service;
 
 import static store.ErrorMessages.PURCHASE_NOT_ENOUGH_QUANTITY;
 
+import camp.nextstep.edu.missionutils.DateTimes;
 import java.util.ArrayList;
 import java.util.List;
 import store.dto.PurchaseDto;
@@ -23,6 +24,18 @@ public class PurchaseService {
         this.inputView = inputView;
         this.productInventory = productInventory;
         this.promotionProductInventory = promotionProductInventory;
+    }
+
+    private boolean isPromotionActive(PurchaseDto dto) {
+        Product product;
+        if (!promotionProductInventory.hasProduct(dto.getName())) {
+            return false;
+        }
+        product = promotionProductInventory.search(dto.getName());
+        if (product.getPromotion().isEmpty()) {
+            return false;
+        }
+        return product.getPromotion().get().isPromotionPeriod(DateTimes.now().toLocalDate());
     }
 
     private Purchase createPurchase(Inventory inventory, String productName, int orderQuantity) {
@@ -84,7 +97,7 @@ public class PurchaseService {
 
         List<Purchase> purchases = new ArrayList<>();
         for (PurchaseDto dto : purchaseDtoList) {
-            if (promotionProductInventory.hasProduct(dto.getName())) {
+            if (isPromotionActive(dto)) {
                 savePurchasePromotionData(purchases, dto);
                 continue;
             }

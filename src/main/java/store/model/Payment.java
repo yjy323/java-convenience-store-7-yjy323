@@ -1,5 +1,6 @@
 package store.model;
 
+import java.util.Collections;
 import java.util.List;
 
 public class Payment {
@@ -10,6 +11,10 @@ public class Payment {
         this.purchases = purchases;
     }
 
+
+    public List<Purchase> getPurchases() {
+        return Collections.unmodifiableList(purchases);
+    }
 
     public boolean isMembershipStatus() {
         return membershipStatus;
