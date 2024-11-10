@@ -2,6 +2,8 @@ package store.model;
 
 import java.util.Collections;
 import java.util.List;
+import store.dto.PaymentDto;
+import store.dto.ProductDto;
 
 public class Payment {
     private final List<Purchase> purchases;
@@ -22,5 +24,50 @@ public class Payment {
 
     public void applyMembership() {
         membershipStatus = true;
+    }
+
+    private void regularProductPayment(PaymentDto paymentDto, Product product, Purchase purchase) {
+        if (product.getPromotion().isPresent()) {
+            return;
+        }
+        paymentDto.addProducts(new ProductDto(product.getName(), product.getPrice(), purchase.getQuantity()));
+        paymentDto.addRegularTotalPrice(purchase.getQuantity() * product.getPrice());
+    }
+
+    private void promotionProductPayment(PaymentDto paymentDto, Product product, Purchase purchase) {
+        if (product.getPromotion().isEmpty()) {
+            return;
+        }
+        Promotion promotion = product.getPromotion().get();
+        int buyFree = promotion.getBuy() + promotion.getFree();
+        int freeQuantity = purchase.getQuantity() / buyFree;
+        paymentDto.addProducts(new ProductDto(product.getName(), product.getPrice(), purchase.getQuantity()));
+        paymentDto.addFreeProducts(new ProductDto(product.getName(), product.getPrice(), freeQuantity));
+        paymentDto.addPromotionTotalPrice(purchase.getQuantity() * product.getPrice());
+        paymentDto.addPromotionDiscount(product.getPrice() * freeQuantity);
+    }
+
+    private void updateProductStock(PaymentDto dto, Product product, int quantity) {
+        product.buy(quantity);
+        dto.addTotalQuantity(quantity);
+    }
+
+    private void membershipDiscountProcess(PaymentDto paymentDto) {
+        if (membershipStatus) {
+            paymentDto.addMembershipDiscount(Math.min((paymentDto.getRegularTotalPrice() / 100 * 30), 8000));
+        }
+    }
+
+    public PaymentDto createPaymentDto() {
+        PaymentDto paymentDto = new PaymentDto();
+
+        for (Purchase purchase : purchases) {
+            Product product = purchase.getProduct();
+            updateProductStock(paymentDto, product, purchase.getQuantity());
+            regularProductPayment(paymentDto, product, purchase);
+            promotionProductPayment(paymentDto, product, purchase);
+        }
+        membershipDiscountProcess(paymentDto);
+        return paymentDto;
     }
 }
