@@ -57,7 +57,7 @@ public class InventoryService {
         }
     }
 
-    public List<ProductDto> getInventoryStatus() {
+    public List<ProductDto> getCurrentInventoryStatus() {
 
         List<ProductDto> inventoryStatus = new ArrayList<>();
         for (String key : keySet) {

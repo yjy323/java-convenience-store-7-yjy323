@@ -34,17 +34,23 @@ public class Payment {
         paymentDto.addRegularTotalPrice(purchase.getQuantity() * product.getPrice());
     }
 
+    private void promotionGift(PaymentDto paymentDto, Product product, int freeQuantity) {
+        if (freeQuantity > 0) {
+            paymentDto.addFreeProducts(new ProductDto(product.getName(), product.getPrice(), freeQuantity));
+            paymentDto.addPromotionDiscount(product.getPrice() * freeQuantity);
+        }
+    }
+
     private void promotionProductPayment(PaymentDto paymentDto, Product product, Purchase purchase) {
         if (product.getPromotion().isEmpty()) {
             return;
         }
         Promotion promotion = product.getPromotion().get();
-        int buyFree = promotion.getBuy() + promotion.getFree();
-        int freeQuantity = purchase.getQuantity() / buyFree;
+        int freeQuantity = purchase.getQuantity() / (promotion.getBuy() + promotion.getFree());
         paymentDto.addProducts(new ProductDto(product.getName(), product.getPrice(), purchase.getQuantity()));
-        paymentDto.addFreeProducts(new ProductDto(product.getName(), product.getPrice(), freeQuantity));
         paymentDto.addPromotionTotalPrice(purchase.getQuantity() * product.getPrice());
-        paymentDto.addPromotionDiscount(product.getPrice() * freeQuantity);
+        promotionGift(paymentDto, product, freeQuantity);
+
     }
 
     private void updateProductStock(PaymentDto dto, Product product, int quantity) {

@@ -70,7 +70,7 @@ public class StoreController {
      * */
 
     private void welcome() {
-        outputView.printProducts(inventoryService.getInventoryStatus());
+        outputView.printProducts(inventoryService.getCurrentInventoryStatus());
     }
 
     private void purchase() {
@@ -97,6 +97,7 @@ public class StoreController {
             welcome();
             purchase();
             payment();
+            
             status = inputView.confirmContinuePurchase();
         }
     }
