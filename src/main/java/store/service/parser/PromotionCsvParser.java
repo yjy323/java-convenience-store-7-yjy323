@@ -29,7 +29,7 @@ public class PromotionCsvParser implements CsvParser<Promotion> {
         String[] splitLine = line.split(DELIMITER);
         validateColumns(MetaData.values().length, splitLine.length);
 
-        String name = splitLine[MetaData.NAME.getIndex()];
+        String name = StringParser.parseName(splitLine[ProductCsvParser.MetaData.NAME.getIndex()]);
         int buy = StringParser.parseInteger(splitLine[MetaData.BUY.getIndex()], Promotion.BUY_MIN_VALUE);
         int free = StringParser.parseInteger(splitLine[MetaData.FREE.getIndex()],
                 Promotion.FREE_MIN_VALUE, Promotion.FREE_MAX_VALUE);

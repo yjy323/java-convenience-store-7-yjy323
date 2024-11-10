@@ -50,7 +50,7 @@ public class ProductCsvParser implements CsvParser<Product> {
         String[] splitLine = line.split(DELIMITER);
         validateColumns(MetaData.values().length, splitLine.length);
 
-        String name = splitLine[MetaData.NAME.getIndex()];
+        String name = StringParser.parseName(splitLine[MetaData.NAME.getIndex()]);
         int price = StringParser.parseInteger(splitLine[MetaData.PRICE.getIndex()], PRICE_MIN_VALUE);
         int quantity = StringParser.parseInteger(splitLine[MetaData.QUANTITY.getIndex()], QUANTITY_MIN_VALUE);
         Promotion promotion = searchPromotion(splitLine[MetaData.PROMOTION.getIndex()]);

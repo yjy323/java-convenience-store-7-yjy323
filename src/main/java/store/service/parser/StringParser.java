@@ -28,6 +28,13 @@ public class StringParser {
     /*
      * Integer
      * */
+    public static String parseName(String input) {
+        if (input == null || input.isEmpty()) {
+            throw new IllegalArgumentException(INVALID_INTEGER.getMessage());
+        }
+        return input;
+    }
+
     public static int parseInteger(String input) {
         try {
             return Integer.parseInt(input);
@@ -91,11 +98,14 @@ public class StringParser {
     public static PurchaseDto parsePurchaseDto(String input) {
         validateWrapperFormat(input);
         input = input.substring(1, input.length() - 1);
-
         validateNameQuantityFormat(input);
         String[] split = input.split(PRODUCT_NAME_QUANTITY_DELIMITER);
-
-        return new PurchaseDto(split[0], parseInteger(split[1], 1));
+        
+        try {
+            return new PurchaseDto(parseName(split[0]), parseInteger(split[1], 1));
+        } catch (Exception e) {
+            throw new IllegalArgumentException(PURCHASE_FORMAT.getMessage());
+        }
     }
 
     public static List<PurchaseDto> parsePurchaseDtoList(String input) {

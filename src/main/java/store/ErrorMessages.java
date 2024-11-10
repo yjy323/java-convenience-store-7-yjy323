@@ -9,6 +9,7 @@ public enum ErrorMessages {
     NON_EXIST_PROMOTION("존재하지 않는 프로모션입니다."),
 
     INVALID_CSV_FORMAT("유효하지 않은 CSV 파일 형식입니다."),
+    INVALID_NAME("이름은 비어 있을 수 없습니다."),
     INVALID_INTEGER("유효하지 않은 정수 형식입니다."),
     INVALID_DATE("유효하지 않은 날짜 형식입니다."),
     INVALID_DATE_RANGE("유효하지 않은 기간입니다."),
