@@ -4,8 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static store.ErrorMessages.PURCHASE_NOT_ENOUGH_QUANTITY;
 
+import camp.nextstep.edu.missionutils.Console;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import store.model.Inventory;
@@ -17,9 +19,7 @@ import store.view.InputView;
 
 class PurchaseServiceTest extends ServiceTest {
 
-    PurchaseService purchaseService = new PurchaseService(new InputView(), productInventory,
-            promotionProductInventory);
-
+    private PurchaseService purchaseService;
     private static final int PRICE_ISN_T_IMPORTANT = 100;
     private static final LocalDate START = LocalDate.of(2024, 1, 1);
     private static final LocalDate END = LocalDate.of(2024, 12, 31);
@@ -39,6 +39,8 @@ class PurchaseServiceTest extends ServiceTest {
         productInventory.store(new Product(PROM_PROD_21, PRICE_ISN_T_IMPORTANT, 10, null));
         productInventory.store(new Product(PROM_PROD_11, PRICE_ISN_T_IMPORTANT, 10, null));
         productInventory.store(new Product(PROD_ONLY, PRICE_ISN_T_IMPORTANT, 10, null));
+        productInventory.store(new Product(PROM_21_ONLY, PRICE_ISN_T_IMPORTANT, 0, null));
+        productInventory.store(new Product(PROM_11_ONLY, PRICE_ISN_T_IMPORTANT, 0, null));
         return productInventory;
     }
 
@@ -56,12 +58,19 @@ class PurchaseServiceTest extends ServiceTest {
     void setUp() {
         productInventory = initProducts();
         promotionProductInventory = initPromotionProducts();
+        purchaseService = new PurchaseService(new InputView(), productInventory,
+                promotionProductInventory);
+    }
+
+    @AfterEach
+    void tearDown() {
+        Console.close();
     }
 
     @Test
     public void 행사상품을_우선_구매한다() throws Exception {
         //Given
-        String simulatedInput = String.format("[%s-%d]", PROM_PROD_21, 10);
+        String simulatedInput = String.format("[%s-%d]\n", PROM_PROD_21, 10);
         System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
 
         //When
@@ -99,27 +108,9 @@ class PurchaseServiceTest extends ServiceTest {
     }
 
     @Test
-    public void 일반재고소진_행사재고부족_추가구매_X_정상테스트() throws Exception {
+    public void 일반재고부족_행사재고부족_예외_테스트() throws Exception {
         //Given
         String simulatedInput = String.format("[%s-%d]\nN", PROM_11_ONLY, 12);
-        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
-
-        //When
-        Payment payment = purchaseService.purchaseProcess();
-        Purchase promotionProduct = payment.getPurchases().getFirst();
-
-        //Then
-        assertThat(payment.getPurchases().size()).isEqualTo(1);
-        assertThat(promotionProduct.getProduct().getName()).isEqualTo(PROM_11_ONLY);
-        assertThat(promotionProduct.getProduct().getPromotion()).isPresent();
-        assertThat(promotionProduct.getProduct().getPromotion().get()).isEqualTo(ONE_PLUS_ONE);
-        assertThat(promotionProduct.getQuantity()).isEqualTo(10);
-    }
-
-    @Test
-    public void 일반재고소진_행사재고부족_추가구매_O_예외테스트() throws Exception {
-        //Given
-        String simulatedInput = String.format("[%s-%d]\nY", PROM_11_ONLY, 12);
         System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
 
         //When, Then

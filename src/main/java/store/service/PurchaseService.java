@@ -41,6 +41,7 @@ public class PurchaseService {
 
     private Purchase createPurchase(Inventory inventory, String productName, int orderQuantity) {
         Product product = inventory.search(productName);
+        product.validateUpdateQuantity(orderQuantity);
         return new Purchase(product, orderQuantity);
     }
 
@@ -50,25 +51,32 @@ public class PurchaseService {
         return dto.getQuantity() - product.getQuantity() + product.getQuantity() % (buy + free);
     }
 
-    private void purchaseRegularInsteadPromotionStock(List<Purchase> purchases, Product product, Promotion promotion,
-                                                      PurchaseDto dto, boolean isAgreedWithoutPromotion) {
-        int remainingStock = dto.getQuantity() - product.getQuantity();
+    private void purchaseRegularInsteadPromotionStock(List<Purchase> purchases, Product product, PurchaseDto dto) {
+
+        int regularQuantity = dto.getQuantity() - product.getQuantity();
+        purchases.add(createPurchase(productInventory, product.getName(), regularQuantity));
         dto.setQuantity(product.getQuantity());
-        if (isAgreedWithoutPromotion) {
-            purchases.add(createPurchase(productInventory, product.getName(), remainingStock));
-            return;
-        }
-        if (promotion.canGetFree(product.getQuantity())) {
+    }
+
+    private void validatePromotionQuantity(PurchaseDto dto) {
+        int regularQuantity = productInventory.search(dto.getName()).getQuantity();
+        int promotionQuantity = promotionProductInventory.search(dto.getName()).getQuantity();
+        if (dto.getQuantity() > regularQuantity + promotionQuantity) {
             throw new IllegalArgumentException(PURCHASE_NOT_ENOUGH_QUANTITY.getMessage());
         }
     }
 
     private void promotionStockManagement(List<Purchase> purchases, Product product, Promotion promotion,
                                           PurchaseDto dto) {
+        validatePromotionQuantity(dto);
         if (product.getQuantity() < dto.getQuantity()) {
             int lackStock = calcLackStock(product, promotion, dto);
             boolean isAgreedWithoutPromotion = inputView.confirmPurchaseWithoutPromotion(dto.getName(), lackStock);
-            purchaseRegularInsteadPromotionStock(purchases, product, promotion, dto, isAgreedWithoutPromotion);
+            if (isAgreedWithoutPromotion) {
+                purchaseRegularInsteadPromotionStock(purchases, product, dto);
+                return;
+            }
+            dto.setQuantity(dto.getQuantity() - lackStock);
         }
     }
 

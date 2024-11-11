@@ -18,6 +18,15 @@ public class InventoryService {
         this.promotionProductInventory = promotionProductInventory;
     }
 
+    private void storeProductOnlyPromotionProduct(Catalog<Product> productCatalog) {
+        for (Product product : productCatalog.getItems()) {
+            String productName = product.getName();
+            if (promotionProductInventory.hasProduct(productName) && !productInventory.hasProduct(productName)) {
+                productInventory.store(new Product(productName, product.getPrice(), 0, null));
+            }
+        }
+    }
+
     public void storeAllProduct(Catalog<Product> productCatalog) {
         for (Product product : productCatalog.getItems()) {
             if (product.getPromotion().isPresent()) {
@@ -26,18 +35,10 @@ public class InventoryService {
             }
             productInventory.store(product);
         }
-    }
-
-    private void createProductStatusOnlyPromotion(List<ProductDto> inventoryStatus, String key) {
-        Product product = promotionProductInventory.search(key);
-        inventoryStatus.add(new ProductDto(product.getName(), product.getPrice(), 0));
+        storeProductOnlyPromotionProduct(productCatalog);
     }
 
     private void createProductStatus(List<ProductDto> inventoryStatus, String key) {
-        if (!productInventory.hasProduct(key)) {
-            createProductStatusOnlyPromotion(inventoryStatus, key);
-            return;
-        }
         Product product = productInventory.search(key);
         inventoryStatus.add(new ProductDto(product.getName(), product.getPrice(), product.getQuantity()));
     }

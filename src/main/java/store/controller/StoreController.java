@@ -31,7 +31,6 @@ public class StoreController {
     private List<String> keySet;
 
     private InventoryService inventoryService;
-    private Payment payment;
 
 
     public StoreController(FileLoader fileLoader, InputView inputView, OutputView outputView) {
@@ -76,11 +75,22 @@ public class StoreController {
         outputView.printProducts(inventoryService.getCurrentInventoryStatus(keySet));
     }
 
-    private void purchase() {
+    private Payment purchase() {
         PurchaseService purchaseService = new PurchaseService(inputView, productInventory, promotionProductInventory);
+        return purchaseService.purchaseProcess();
+    }
+
+    private void payment(Payment payment) {
+        PaymentService paymentService = new PaymentService(payment);
+        paymentService.confirmMembership(inputView.confirmMembership());
+        outputView.printReceipt(paymentService.paymentProcess());
+    }
+    
+    private void purchaseAndPayment() {
         while (true) {
             try {
-                payment = purchaseService.purchaseProcess();
+                Payment payment = purchase();
+                payment(payment);
                 break;
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
@@ -88,18 +98,11 @@ public class StoreController {
         }
     }
 
-    private void payment() {
-        PaymentService paymentService = new PaymentService(payment);
-        paymentService.confirmMembership(inputView.confirmMembership());
-        outputView.printReceipt(paymentService.paymentProcess());
-    }
-
     public void run() {
         boolean status = true;
         while (status) {
             welcome();
-            purchase();
-            payment();
+            purchaseAndPayment();
 
             status = inputView.confirmContinuePurchase();
         }

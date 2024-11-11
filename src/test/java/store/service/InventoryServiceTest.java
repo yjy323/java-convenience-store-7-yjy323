@@ -35,7 +35,7 @@ class InventoryServiceTest extends ServiceTest {
     @Override
     protected Inventory initProducts() {
         Inventory productInventory = new Inventory();
-        for (int i = 0; i < SIZE / 2; i++) {
+        for (int i = 0; i < SIZE; i++) {
             Product product = new Product(FIX_PRODUCT_NAME + i, FIX_PRICE, FIX_QUANTITY, null);
             productInventory.store(product);
         }
@@ -52,13 +52,9 @@ class InventoryServiceTest extends ServiceTest {
 
     private List<ProductDto> createProductDtoList() {
         List<ProductDto> productList = new ArrayList<>();
-        int quantity = FIX_QUANTITY;
         for (int i = 0; i < SIZE; i++) {
-            if (i == SIZE / 2) {
-                quantity = 0;
-            }
             productList.add(createProductDto(i, FIX_QUANTITY, FIX_PROMOTION_NAME));
-            productList.add(createProductDto(i, quantity, ""));
+            productList.add(createProductDto(i, FIX_QUANTITY, ""));
         }
         return productList;
     }
