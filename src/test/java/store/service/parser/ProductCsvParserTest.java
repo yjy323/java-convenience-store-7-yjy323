@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static store.ErrorMessages.INVALID_CSV_FORMAT;
 import static store.ErrorMessages.NON_EXIST_PROMOTION;
 
+import camp.nextstep.edu.missionutils.DateTimes;
 import java.time.LocalDate;
 import java.util.List;
 import org.assertj.core.api.Assertions;
@@ -21,7 +22,7 @@ class ProductCsvParserTest {
     private ProductCsvParser parser;
 
     private Promotion createPromotion(String name) {
-        LocalDate dummyDate = LocalDate.now();
+        LocalDate dummyDate = DateTimes.now().toLocalDate();
         return new Promotion(name, 1, 1, dummyDate, dummyDate);
     }
 

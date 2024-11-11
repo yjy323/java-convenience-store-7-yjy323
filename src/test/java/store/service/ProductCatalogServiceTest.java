@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static store.ErrorMessages.DUPLICATE_ITEM;
 
+import camp.nextstep.edu.missionutils.DateTimes;
 import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +19,7 @@ class ProductCatalogServiceTest {
     private CatalogService<Product> catalogService;
 
     private Promotion createPromotion(String name) {
-        LocalDate dummyDate = LocalDate.now();
+        LocalDate dummyDate = DateTimes.now().toLocalDate();
         return new Promotion(name, 1, 1, dummyDate, dummyDate);
     }
 
