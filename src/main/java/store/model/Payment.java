@@ -1,5 +1,6 @@
 package store.model;
 
+import java.util.Collections;
 import java.util.List;
 import store.dto.PaymentDto;
 import store.dto.ProductDto;
@@ -14,6 +15,10 @@ public class Payment {
 
     public void applyMembership() {
         membershipStatus = true;
+    }
+
+    public List<Purchase> getPurchases() {
+        return Collections.unmodifiableList(purchases);
     }
 
     private void regularProductPayment(PaymentDto paymentDto, Product product, Purchase purchase) {
