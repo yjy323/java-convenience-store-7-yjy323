@@ -1,5 +1,6 @@
 package store.service;
 
+import static store.ErrorMessages.PURCHASE_NON_EXIST;
 import static store.ErrorMessages.PURCHASE_NOT_ENOUGH_QUANTITY;
 
 import camp.nextstep.edu.missionutils.DateTimes;
@@ -89,6 +90,9 @@ public class PurchaseService {
     }
 
     private void savePurchaseData(List<Purchase> purchases, PurchaseDto dto) {
+        if (!productInventory.hasProduct(dto.getName())) {
+            throw new IllegalArgumentException(PURCHASE_NON_EXIST.getMessage());
+        }
         purchases.add(createPurchase(productInventory, dto.getName(), dto.getQuantity()));
     }
 

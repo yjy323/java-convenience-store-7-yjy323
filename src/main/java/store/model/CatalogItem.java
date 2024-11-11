@@ -1,6 +1,6 @@
 package store.model;
 
-public class CatalogItem {
+public abstract class CatalogItem {
     protected String name;
 
     public String getName() {

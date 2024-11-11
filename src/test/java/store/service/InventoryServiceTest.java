@@ -1,55 +1,15 @@
 package store.service;
 
+import static camp.nextstep.edu.missionutils.test.Assertions.assertSimpleTest;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import camp.nextstep.edu.missionutils.DateTimes;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import store.dto.ProductDto;
-import store.model.Inventory;
-import store.model.Product;
-import store.model.Promotion;
 
-class InventoryServiceTest {
+class ProductDisplayServiceTest extends ServiceTest {
 
-    private final Inventory productInventory = createProducts();
-    private final Inventory promotionProductInventory = createPromotionProducts();
-
-    private static final int SIZE = 4;
-    private static final int FIX_PRICE = 1000;
-    private static final int FIX_QUANTITY = 10;
-    private static final String FIX_PRODUCT_NAME = "상품";
-    private static final String FIX_PROMOTION_NAME = "프로모션";
-
-    private List<String> keySets() {
-        List<String> keys = new ArrayList<>();
-        for (int i = 0; i < SIZE; i++) {
-            keys.add(FIX_PRODUCT_NAME + i);
-        }
-        return keys;
-    }
-
-    private Inventory createPromotionProducts() {
-        Inventory promotionProductInventory = new Inventory();
-        LocalDate now = DateTimes.now().toLocalDate();
-        Promotion promotion = new Promotion(FIX_PROMOTION_NAME, 2, 1, now, now);
-        for (int i = 0; i < SIZE; i++) {
-            Product product = new Product(FIX_PRODUCT_NAME + i, FIX_PRICE, FIX_QUANTITY, promotion);
-            promotionProductInventory.store(product);
-        }
-        return promotionProductInventory;
-    }
-
-    private Inventory createProducts() {
-        Inventory productInventory = new Inventory();
-        for (int i = 0; i < SIZE / 2; i++) {
-            Product product = new Product(FIX_PRODUCT_NAME + i, FIX_PRICE, FIX_QUANTITY, null);
-            productInventory.store(product);
-        }
-        return productInventory;
-    }
 
     private List<ProductDto> createProductDtoList() {
         List<ProductDto> productList = new ArrayList<>();
@@ -78,5 +38,32 @@ class InventoryServiceTest {
 
         //Then
         assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @Test
+    void 파일에_있는_상품_목록_출력() {
+        assertSimpleTest(() -> {
+            run("[물-1]", "N", "N");
+            assertThat(output()).contains(
+                    "- 콜라 1,000원 10개 탄산2+1",
+                    "- 콜라 1,000원 10개",
+                    "- 사이다 1,000원 8개 탄산2+1",
+                    "- 사이다 1,000원 7개",
+                    "- 오렌지주스 1,800원 9개 MD추천상품",
+                    "- 오렌지주스 1,800원 재고 없음",
+                    "- 탄산수 1,200원 5개 탄산2+1",
+                    "- 탄산수 1,200원 재고 없음",
+                    "- 물 500원 10개",
+                    "- 비타민워터 1,500원 6개",
+                    "- 감자칩 1,500원 5개 반짝할인",
+                    "- 감자칩 1,500원 5개",
+                    "- 초코바 1,200원 5개 MD추천상품",
+                    "- 초코바 1,200원 5개",
+                    "- 에너지바 2,000원 5개",
+                    "- 정식도시락 6,400원 8개",
+                    "- 컵라면 1,700원 1개 MD추천상품",
+                    "- 컵라면 1,700원 10개"
+            );
+        });
     }
 }
