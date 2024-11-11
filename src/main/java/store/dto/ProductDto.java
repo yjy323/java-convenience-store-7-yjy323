@@ -1,5 +1,7 @@
 package store.dto;
 
+import java.util.Objects;
+
 public class ProductDto {
 
     private String name;
@@ -51,5 +53,21 @@ public class ProductDto {
 
     public void setPromotionName(String promotionName) {
         this.promotionName = promotionName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ProductDto that)) {
+            return false;
+        }
+        return Objects.equals(name, that.name) && Objects.equals(promotionName, that.promotionName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, promotionName);
     }
 }

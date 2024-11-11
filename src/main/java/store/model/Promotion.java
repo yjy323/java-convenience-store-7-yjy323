@@ -5,14 +5,13 @@ import static store.ErrorMessages.INVALID_DATE_RANGE;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class Promotion {
+public class Promotion extends CatalogItem {
 
     public static final int BUY_MIN_VALUE = 1;
     public static final int FREE_MIN_VALUE = 1;
     public static final int FREE_MAX_VALUE = 1;
     public static final String NON_PROMOTION = "null";
 
-    private String name;
     private int buy;
     private int free;
     private LocalDate startTime;
@@ -49,9 +48,6 @@ public class Promotion {
     /*
      * Getters
      * */
-    public String getName() {
-        return name;
-    }
 
     public int getBuy() {
         return buy;

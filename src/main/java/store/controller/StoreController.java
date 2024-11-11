@@ -1,5 +1,6 @@
 package store.controller;
 
+import java.util.List;
 import store.model.Catalog;
 import store.model.Inventory;
 import store.model.Payment;
@@ -27,9 +28,11 @@ public class StoreController {
 
     private final Inventory productInventory = new Inventory();
     private final Inventory promotionProductInventory = new Inventory();
+    private List<String> keySet;
 
-    InventoryService inventoryService;
-    Payment payment;
+    private InventoryService inventoryService;
+    private Payment payment;
+
 
     public StoreController(FileLoader fileLoader, InputView inputView, OutputView outputView) {
         this.fileLoader = fileLoader;
@@ -54,9 +57,9 @@ public class StoreController {
     }
 
     private void initInventory(Catalog<Product> productCatalog) {
-        inventoryService = new InventoryService(productCatalog, productInventory,
-                promotionProductInventory);
-        inventoryService.storeAllProduct();
+        keySet = productCatalog.getKeySet();
+        inventoryService = new InventoryService(productInventory, promotionProductInventory);
+        inventoryService.storeAllProduct(productCatalog);
     }
 
     public void init() {
@@ -70,7 +73,7 @@ public class StoreController {
      * */
 
     private void welcome() {
-        outputView.printProducts(inventoryService.getCurrentInventoryStatus());
+        outputView.printProducts(inventoryService.getCurrentInventoryStatus(keySet));
     }
 
     private void purchase() {
@@ -97,7 +100,7 @@ public class StoreController {
             welcome();
             purchase();
             payment();
-            
+
             status = inputView.confirmContinuePurchase();
         }
     }

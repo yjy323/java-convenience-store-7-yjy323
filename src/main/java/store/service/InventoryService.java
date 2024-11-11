@@ -9,20 +9,16 @@ import store.model.Product;
 import store.model.Promotion;
 
 public class InventoryService {
-    private final Catalog<Product> productCatalog;
     private final Inventory productInventory;
     private final Inventory promotionProductInventory;
-    private final List<String> keySet;
 
-    public InventoryService(Catalog<Product> productCatalog, Inventory productInventory,
+    public InventoryService(Inventory productInventory,
                             Inventory promotionProductInventory) {
-        this.productCatalog = productCatalog;
         this.productInventory = productInventory;
         this.promotionProductInventory = promotionProductInventory;
-        keySet = productCatalog.getItems().stream().map(Product::getName).distinct().toList();
     }
 
-    public void storeAllProduct() {
+    public void storeAllProduct(Catalog<Product> productCatalog) {
         for (Product product : productCatalog.getItems()) {
             if (product.getPromotion().isPresent()) {
                 promotionProductInventory.store(product);
@@ -57,7 +53,7 @@ public class InventoryService {
         }
     }
 
-    public List<ProductDto> getCurrentInventoryStatus() {
+    public List<ProductDto> getCurrentInventoryStatus(List<String> keySet) {
 
         List<ProductDto> inventoryStatus = new ArrayList<>();
         for (String key : keySet) {

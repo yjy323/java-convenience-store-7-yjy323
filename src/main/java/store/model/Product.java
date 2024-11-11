@@ -5,12 +5,11 @@ import static store.ErrorMessages.PURCHASE_NOT_ENOUGH_QUANTITY;
 import java.util.Objects;
 import java.util.Optional;
 
-public class Product {
+public class Product extends CatalogItem {
 
     public static final int PRICE_MIN_VALUE = 1;
     public static final int QUANTITY_MIN_VALUE = 0;
 
-    private String name;
     private int price;
     private int quantity;
     private Optional<Promotion> promotion;
@@ -37,9 +36,6 @@ public class Product {
      * Getters
      * */
 
-    public String getName() {
-        return name;
-    }
 
     public int getPrice() {
         return price;
