@@ -22,9 +22,6 @@ public class Payment {
     }
 
     private void regularProductPayment(PaymentDto paymentDto, Product product, Purchase purchase) {
-        if (product.getPromotion().isPresent()) {
-            return;
-        }
         paymentDto.addProducts(new ProductDto(product.getName(), product.getPrice(), purchase.getQuantity()));
         paymentDto.addRegularTotalPrice(purchase.getQuantity() * product.getPrice());
     }
@@ -37,9 +34,6 @@ public class Payment {
     }
 
     private void promotionProductPayment(PaymentDto paymentDto, Product product, Purchase purchase) {
-        if (product.getPromotion().isEmpty()) {
-            return;
-        }
         Promotion promotion = product.getPromotion().get();
         int freeQuantity = purchase.getQuantity() / (promotion.getBuy() + promotion.getFree());
 
@@ -61,14 +55,21 @@ public class Payment {
         }
     }
 
+    private void productPayment(PaymentDto paymentDto, Product product, Purchase purchase) {
+        if (product.getPromotion().isEmpty() || purchase.getQuantity() <= product.getPromotion().get().getBuy()) {
+            regularProductPayment(paymentDto, product, purchase);
+            return;
+        }
+        promotionProductPayment(paymentDto, product, purchase);
+    }
+
     public PaymentDto createPaymentDto() {
         PaymentDto paymentDto = new PaymentDto();
 
         for (Purchase purchase : purchases) {
             Product product = purchase.getProduct();
             updateProductStock(paymentDto, product, purchase.getQuantity());
-            regularProductPayment(paymentDto, product, purchase);
-            promotionProductPayment(paymentDto, product, purchase);
+            productPayment(paymentDto, product, purchase);
         }
         membershipDiscountProcess(paymentDto);
         return paymentDto;

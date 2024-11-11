@@ -163,7 +163,6 @@ class PaymentServiceTest {
 
         //When
         PaymentDto dto = paymentService.paymentProcess();
-        System.out.println(dto.getMembershipDiscount());
 
         //Then
         assertThat(dto.getMembershipDiscount() == 8000).isEqualTo(expected);
@@ -172,16 +171,42 @@ class PaymentServiceTest {
     @Test
     public void 행사상품_멤버십_최대_할인() throws Exception {
         //Given
-        List<Purchase> purchases = List.of(create(MEMBERSHIP_MAX_PROM, 1), create(MEMBERSHIP_NEAR_MAX_PROM, 1));
+        List<Purchase> purchases = List.of(create(MEMBERSHIP_MAX_PROM, 2), create(MEMBERSHIP_NEAR_MAX_PROM, 2));
         Payment payment = new Payment(purchases);
         payment.applyMembership();
         paymentService = new PaymentService(payment);
 
         //When
         PaymentDto dto = paymentService.paymentProcess();
-        System.out.println(dto.getMembershipDiscount());
 
         //Then
         assertThat(dto.getMembershipDiscount()).isEqualTo(0);
+    }
+
+    @Test
+    public void 행사상품_단품구매_멤버십_할인() throws Exception {
+        //Given
+        List<Purchase> purchases = List.of(create(PRODUCT_PROM_11, 1),
+                create(PRODUCT_PROM_21, 2),
+                create(PRODUCT_PROM_11, 2),
+                create(PRODUCT_PROM_21, 3));
+        Payment payment = new Payment(purchases);
+        payment.applyMembership();
+        paymentService = new PaymentService(payment);
+
+        //When
+        PaymentDto dto = paymentService.paymentProcess();
+
+        //Then
+        // 구매 가격
+        assertThat(dto.getRegularTotalPrice()).isEqualTo(3000);
+        assertThat(dto.getPromotionTotalPrice()).isEqualTo(5000);
+        // 할인 가격
+        assertThat(dto.getPromotionDiscount()).isEqualTo(2000);
+        assertThat(dto.getMembershipDiscount()).isEqualTo(900);
+        // 구매 수량
+        assertThat(dto.getTotalQuantity()).isEqualTo(8);
+        assertThat(dto.getProducts().stream().mapToInt(ProductDto::getQuantity).sum()).isEqualTo(8);
+        assertThat(dto.getFreeProducts().stream().mapToInt(ProductDto::getQuantity).sum()).isEqualTo(2);
     }
 }
