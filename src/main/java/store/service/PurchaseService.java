@@ -33,7 +33,7 @@ public class PurchaseService {
             return false;
         }
         product = promotionProductInventory.search(dto.getName());
-        if (product.getPromotion().isEmpty()) {
+        if (product.getPromotion().isEmpty() || product.getQuantity() == 0) {
             return false;
         }
         return product.getPromotion().get().isPromotionPeriod(DateTimes.now().toLocalDate());
@@ -69,7 +69,7 @@ public class PurchaseService {
     private void promotionStockManagement(List<Purchase> purchases, Product product, Promotion promotion,
                                           PurchaseDto dto) {
         validatePromotionQuantity(dto);
-        
+
         if (product.getQuantity() < dto.getQuantity()) {
             int lackStock = calcLackStock(product, promotion, dto);
             if (inputView.confirmPurchaseWithoutPromotion(dto.getName(), lackStock)) {
