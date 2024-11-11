@@ -69,10 +69,10 @@ public class PurchaseService {
     private void promotionStockManagement(List<Purchase> purchases, Product product, Promotion promotion,
                                           PurchaseDto dto) {
         validatePromotionQuantity(dto);
+        
         if (product.getQuantity() < dto.getQuantity()) {
             int lackStock = calcLackStock(product, promotion, dto);
-            boolean isAgreedWithoutPromotion = inputView.confirmPurchaseWithoutPromotion(dto.getName(), lackStock);
-            if (isAgreedWithoutPromotion) {
+            if (inputView.confirmPurchaseWithoutPromotion(dto.getName(), lackStock)) {
                 purchaseRegularInsteadPromotionStock(purchases, product, dto);
                 return;
             }

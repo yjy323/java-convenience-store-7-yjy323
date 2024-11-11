@@ -71,7 +71,7 @@ public class StoreController {
      * Run Method
      * */
 
-    private void welcome() {
+    private void displayProducts() {
         outputView.printProducts(inventoryService.getCurrentInventoryStatus(keySet));
     }
 
@@ -85,7 +85,7 @@ public class StoreController {
         paymentService.confirmMembership(inputView.confirmMembership());
         outputView.printReceipt(paymentService.paymentProcess());
     }
-    
+
     private void purchaseAndPayment() {
         while (true) {
             try {
@@ -101,7 +101,7 @@ public class StoreController {
     public void run() {
         boolean status = true;
         while (status) {
-            welcome();
+            displayProducts();
             purchaseAndPayment();
 
             status = inputView.confirmContinuePurchase();
